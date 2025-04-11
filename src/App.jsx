@@ -79,7 +79,7 @@ function App() {
       </select>
 
       {
-        showDiv && <h2>Your selected {selectedCity},{selectedState},{selectedCountry}</h2>
+        showDiv && <h2>You selected {selectedCity}, {selectedState}, {selectedCountry}</h2>
 
         
       }
