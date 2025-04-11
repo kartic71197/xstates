@@ -11,22 +11,40 @@ function App() {
   const [selectedCity, setSelectedCity] = useState("");
   const [showDiv, setShowDiv] = useState(false);
 
-
   useEffect(() => {
     fetchCountries();
   }, []);
 
   const fetchCountries = async () => {
-    const response = await fetch("https://crio-location-selector.onrender.com/countries");
-    const data = await response.json();
-    setCountries(data);
+    try {
+      const response = await fetch(
+        "https://crio-location-selector.onrender.com/countries"
+      );
+      const data = await response.json();
+      setCountries(data);
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+      setCountries([]);
+      setCities([]);
+      setStates([]);
+      setSelectedCountry("");
+      setSelectedState("");
+      setSelectedCity("");
+      setShowDiv(false);
+    }
   };
 
   const fetchStates = async (e) => {
     const country = e.target.value;
     setSelectedCountry(country);
     setCities([]);
-    const response = await fetch(`https://crio-location-selector.onrender.com/country=${country}/states`);
+    setStates([]);
+    setSelectedState("");
+    setSelectedCity("");
+    setShowDiv(false);
+    const response = await fetch(
+      `https://crio-location-selector.onrender.com/country=${country}/states`
+    );
     const data = await response.json();
     setStates(data);
   };
@@ -34,6 +52,9 @@ function App() {
   const fetchCities = async (e) => {
     const state = e.target.value;
     setSelectedState(state);
+    setCities([]);
+    setSelectedCity("");
+    setShowDiv(false);
     const response = await fetch(
       `https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${state}/cities`
     );
@@ -41,7 +62,7 @@ function App() {
     setCities(data);
   };
 
-  function showData(e){
+  function showData(e) {
     const city = e.target.value;
     setSelectedCity(city);
     if (city) {
@@ -78,11 +99,11 @@ function App() {
         ))}
       </select>
 
-      {
-        showDiv && <h2>You selected {selectedCity}, {selectedState}, {selectedCountry}</h2>
-
-        
-      }
+      {showDiv && (
+        <h2>
+          You selected {selectedCity}, {selectedState}, {selectedCountry}
+        </h2>
+      )}
     </>
   );
 }
